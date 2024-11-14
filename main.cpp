@@ -37,6 +37,26 @@ int main(int argc, char* argv[])
         }
     }
 
+    // output help if requested. Non-mandatory
+    // only output help if it is the only parameter
+    // do not process further
+    if (params.size() == 1 && params.find("--help") != params.end()) {
+        // TODO: specific help for each argument?
+
+        std::cout << "--mode:" << std::endl;
+            std::cout << "\tlearn - train and output the model. Paths to the dataset CSV and the model output file are requred" << std::endl;
+            std::cout << "\tevaluate - check the accuracy of the model. Paths to the model and the test dataset CSV are required" << std::endl;
+            std::cout << "\tclassify - classify a dataset. Paths to the model and the dataset CSV are required" << std::endl;
+
+        std::cout << "--dataset - path to the CSV file holding the data instances. Should be formatted appropriately" << std::endl;
+        std::cout << "--model - path to the binary file storing the model. The model will be created in the learn mode; evaluate and classify modes require the existing and valid model file" << std::endl;
+        std::cout << "--model-txt - path to the text file holding the model in the human-readable format. Non-mandatory" << std::endl;
+        std::cout << "--ratio - ratio of grow to prune dataset. Non-mandatory. Default is 2/3" << std::endl;
+        std::cout << "--k - number of times the optimization is performed. Non-mandatory. Default is 2" << std::endl;
+
+        return 0;
+    }
+
     // validate and save mode
     if (params.find("--mode") == params.end()) {
         std::cerr << "Mandatory parameter mode is missing" << std::endl;
@@ -111,7 +131,6 @@ int main(int argc, char* argv[])
         size_t pos = 0;
         k = std::stoi(params.at("--k")[0], &pos);
     }
-
 
     auto ripperk = RIPPERk(path_to_dataset.generic_string(), path_to_model_txt.generic_string(), path_to_model_bin.generic_string(), pruning_ratio, k);
 
